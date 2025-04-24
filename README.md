@@ -20,6 +20,6 @@ This repository contains the code and scripts used in the analyses for the above
 
 ## Data availability
 
-The genealogical data is publicly available upon request via an independent data access committee by BALSAC (https://balsac.uqac.ca/acces-donnees/). The data from the Eastern Quebec schizophrenia and bipolar disorder kindred study is available upon request from MM. The data from the CARTaGENE cohort is publicly available via an independent data access committee by the CARTaGENE cohort (https://cartagene.qc.ca/en/researchers/access-request.html). 
+The genealogical data is publicly available upon request via an independent data access committee by [BALSAC](https://balsac.uqac.ca/acces-donnees/). The data from the Eastern Quebec schizophrenia and bipolar disorder kindred study is available upon request from MM. The data from the CARTaGENE cohort is publicly available via an independent data access committee by the [CARTaGENE cohort](https://cartagene.qc.ca/en/researchers/access-request.html). 
 
 ---
