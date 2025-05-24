@@ -77,3 +77,46 @@ carriers_corrected$IID <- sub("_.*", "", carriers_corrected$IID)
 carriers_corrected <- carriers_corrected %>%
   mutate(across(IID, ~ ifelse(!is.na(.), paste0(., "_", .), NA)))
 write.table(carriers_corrected, "/lustre03/project/6033529/schizo/mylgag/Beauce_founder_effect/enriched_variants/results/carriers_enriched_variants_beauceVSurbanQc_V2.txt", sep = '\t', quote = FALSE, row.names = FALSE, col.names = TRUE)
+
+carrier_file <- "/lustre03/project/6033529/schizo/mylgag/Beauce_founder_effect/enriched_variants/results/carriers_enriched_variants_beauceVSurbanQc_in_UrbanQc_V2.txt"
+carriers_corrected <- read.table(carrier_file, header = TRUE)
+path_out <- "/home/mylgag/projects/rrg-girardsi/schizo/mylgag/Beauce_founder_effect/enriched_variants/results/results_clinvar/"
+file_names <- readLines("/home/mylgag/projects/rrg-girardsi/schizo/mylgag/Beauce_founder_effect/enriched_variants/scripts/ibd_files_list.txt")
+
+# Loop through each IBD file and chromosome number
+chr_numbers <- 1:22
+for (i in seq(1, length(file_names))) {
+  file <- file_names[i]
+  chr <- chr_numbers[i]  # Get the chromosome number for this file
+  print(paste("Reading file:", file))
+
+  # Read the file and name columns
+  file_data <- read.table(file, header = TRUE)
+  names(file_data) <- c('ind1', 'chr1', 'ind2', 'chr2', 'chr', 'start', 'end', 'LOD', 'length')
+
+  # Filter rows based on the IBD length (length >= 2)
+  file_data <- file_data[file_data$length >= 2, ]
+  # Loop through each variant
+  for (variant in unique(carriers_corrected$variant)) {
+    # Get the IDs for the current variant
+    ids <- carriers_corrected$IID[carriers_corrected$variant == variant]
+
+    # Filter IBD sharing where both ID1 and ID2 are in the list of IDs for the current variant
+    filtered <- file_data %>%
+      filter(ind1 %in% ids & ind2 %in% ids) %>%
+      mutate(variant = variant)
+
+    # Define the output file path using the specified pattern
+    output_file <- paste0(path_out, "ibd_sharing_carrier_BeauceVSUrbanQc_", variant, "_chr", chr, "_in_UrbanQc.txt")
+
+    # Write the filtered data to the output file
+    write.table(filtered, output_file, row.names = FALSE, quote = FALSE)
+
+    print(paste("Written file:", output_file))
+  }
+}
+
+## Save the list of variants to scroll through
+unique_variants <- data.frame(variant = unique(carriers_corrected$variant))
+write.table(unique_variants, paste0(path_out, "list_of_variants_BeauceVSUrbanQc_in_UrbanQc_V2.txt"), row.names = FALSE, col.names = FALSE, quote = FALSE)
+
