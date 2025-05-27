@@ -15,7 +15,7 @@ This branch contains the scripts and documentation for the genetic analyses perf
   
 2. **Identify founder variants**
    - [identify_variants_with_higher_frequency.R](identify_variants_with_higher_frequency.R) :
-  
+   - [filter_enriched_variants_carriers_ibd.R](filter_enriched_variants_carriers_ibd.R) : 
    - [IBDsharing_byPosition.py](IBDsharing_byPosition.py) :
    - [IBDsharing_variantPosition.py](IBDsharing_variantPosition.py) :
    - [classify_variants.R](classify_variants.R) : 
