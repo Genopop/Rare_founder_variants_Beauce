@@ -15,6 +15,8 @@ This repository contains the code and scripts used in the analyses for the above
 ---
 
 ## Repository Structure
+This repository contains two branches : 
+- [Genetic_analyses](Genetic_analyses) contains the scripts related to the ancestry-based clustering of the genotyped data and the identification rare pathogenic variants with an elevated frequency in Beauce due to the regional founder effect. 
 
 ---
 
