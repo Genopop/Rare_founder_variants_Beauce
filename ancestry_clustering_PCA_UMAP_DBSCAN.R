@@ -12,7 +12,7 @@ library(changepoint)
 # =========================
 # 1. Load PCA Object
 # =========================
-load("/lustre03/project/6033529/schizo/mylgag/Beauce_founder_effect/enriched_variants/data/schizo.cag.hg38.commonsnps.mind0.05.hwe10-6_LDpruned2_maf0.05_canadianIDs_PC-AiR_IBD0.125_pedrigree0.0625_related.RData")
+load("schizo.cag.hg38.commonsnps.mind0.05.hwe10-6_LDpruned_maf0.05_canadianIDs_PC-AiR_IBD0.125_pedrigree0.0625_related.RData")
 mypcair <- unrel_pcair
 pcs <- data.frame(mypcair$vectors)
 colnames(pcs) <- paste0("PC", 1:ncol(pcs))
@@ -199,7 +199,7 @@ gg2 <- ggplot(no0, aes(x = Coord1, y = Coord2, color = as.factor(cluster), alpha
   coord_fixed()
 
 gg <- grid.arrange(gg1, gg2, ncol = 2)
-ggsave("/home/mylgag/projects/rrg-girardsi/schizo/mylgag/Beauce_founder_effect/enriched_variants/results/fig5schizo.cag.hg38.commonsnps.mind0.05.hwe10-6_LDpruned2_maf0.05_canadianIDs_PC-AiR_IBD0.125_pedrigree0.0625_related_12PCs_UMAP.png",
+ggsave("fig5_12PCs_UMAP.jpeg",
        gg, width = 8.27, height = 5.9, dpi = 300, units = "in")
 
 # Identify individuals from Beauce, UrbanQC and SLSJ clusters
@@ -208,15 +208,15 @@ get_cluster_inds <- function(df, cluster_number) {
   data.frame(FID = clust$IID, IID = clust$IID)
 }
 write.table(get_cluster_inds(no0, 1),
-            "/home/mylgag/projects/rrg-girardsi/schizo/mylgag/Beauce_founder_effect/enriched_variants/results/schizo.cag.hg38..._UMAP_Beauce_cluster.txt", 
+            "Beauce_cluster.txt", 
             col.names = FALSE, row.names = FALSE, quote = FALSE)
 
 write.table(get_cluster_inds(no0, 5),
-            "/home/mylgag/projects/rrg-girardsi/schizo/mylgag/Beauce_founder_effect/enriched_variants/results/schizo.cag.hg38..._UMAP_UrbanQc_cluster.txt", 
+            "UrbanQc_cluster.txt", 
             col.names = FALSE, row.names = FALSE, quote = FALSE)
 
 write.table(get_cluster_inds(no0, 2),
-            "/home/mylgag/projects/rrg-girardsi/schizo/mylgag/Beauce_founder_effect/enriched_variants/results/schizo.cag.hg38..._UMAP_SLSJ_cluster.txt", 
+            "SLSJ_cluster.txt", 
             col.names = FALSE, row.names = FALSE, quote = FALSE)                                                           
 
 # Get proportion of individuals per region in the clusters
@@ -242,6 +242,6 @@ gg <- ggplot(cluster_stats, aes(x = cluster, y = proportion, fill = origin)) +
   labs(x = "Cluster", y = "Percentage of individuals (%)", fill = "Recruitment region \nor birthplace") +
   theme_custom
 
-ggsave("/lustre03/project/6033529/schizo/mylgag/Beauce_founder_effect/enriched_variants/results/figS4schizo..._cluster_regional_composition.svg", 
+ggsave("figS4_cluster_regional_composition.svg", 
        gg, width = 8, height = 6, dpi = 300, units = "in")                                                           
                                                            
