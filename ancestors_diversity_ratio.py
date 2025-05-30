@@ -1,89 +1,118 @@
-## Import packages
 import geneo as gen
 import pandas as pd
 import numpy as np
-import psutil
-import sys
-from sys import argv
+import pickle
 import random
+import sys
 from collections import defaultdict
 
-n_iterations=1000
-n_pro=7445
+# === Parameters ===
+n_iterations = 1000
+n_pro = 7445
 
-def print_memory_usage(stage):
-    """Print the current memory usage with a custom message."""
-    process = psutil.Process()
-    mem_info = process.memory_info()
-    print(f"[{stage}] Memory usage: {mem_info.rss / 1024**2:.2f} MB")
-  
-## Get the pedigree informations
+# === Input files ===
 ped_file = sys.argv[1]
+out_file = sys.argv[2]
+cache_file = sys.argv[3]
+
+# === Load pedigree ===
 ped = gen.genealogy(ped_file)
 pro = gen.pro(ped)
-print(f"Length of pro: {len(pro)}")
+print(f"Number of probands: {len(pro)}")
 
-## Identify all unique ancestors
-unique_ancestors = gen.ancestor(ped, pro)
-print(f"Length of unique_ancestors: {len(unique_ancestors)}")
+# === Memoized recursive ancestor count ===
+def compute_ancestor_counts(ped, individual_id, memo):
+    if individual_id in memo:
+        return memo[individual_id]
 
-def get_ancestors_with_counts(ped, individual_id, ancestor_counts=None, visited=None):
-    """
-    Function to count each time an ancestor appear in the pedigree of all ancestors, accounting for multiple apparition in a same pedigree. 
-    Returns : a dictionnary {ancestor_id: number of apparitions}
-    """
-    if ancestor_counts is None:
-        ancestor_counts = defaultdict(int)
-    if visited is None:
-        visited = set()
-    try:
-        person = ped[int(individual_id)]
-    except (KeyError, IndexError):
-        return ancestor_counts  # Indiv not found
+    ancestor_counts = defaultdict(int)
+    stack = [(individual_id, False)]
+    visited = set()
+    temp_results = {}
 
-    # Avoid going back to the same ancestor
-    if individual_id in visited:
-        return ancestor_counts
-    visited.add(individual_id)
+    while stack:
+        current_id, processed = stack.pop()
+        if processed:
+            try:
+                person = ped[int(current_id)]
+            except (KeyError, IndexError):
+                temp_results[current_id] = defaultdict(int)
+                continue
 
-    for parent in [person.father, person.mother]:
-        if parent is not None:
-            parent_id = parent.ind
-            ancestor_counts[parent_id] += 1
-            get_ancestors_with_counts(ped, parent_id, ancestor_counts, visited)
+            combined = defaultdict(int)
+            for parent in [person.father, person.mother]:
+                if parent is not None:
+                    pid = parent.ind
+                    if pid == 0:
+                        continue
+                    combined[pid] += 1
+                    if pid in temp_results:
+                        for anc_id, count in temp_results[pid].items():
+                            if anc_id == 0:
+                                continue
+                            combined[anc_id] += count
+            temp_results[current_id] = combined
+            continue
 
-    return ancestor_counts
+        if current_id in memo:
+            temp_results[current_id] = memo[current_id]
+            continue
 
-ancestor_stats = defaultdict(list)
+        if current_id in visited:
+            continue
+        visited.add(current_id)
+
+        stack.append((current_id, True))
+        try:
+            person = ped[int(current_id)]
+        except (KeyError, IndexError):
+            continue
+
+        for parent in [person.father, person.mother]:
+            if parent is not None and parent.ind != 0:
+                stack.append((parent.ind, False))
+
+    result = temp_results.get(individual_id, defaultdict(int))
+    memo[individual_id] = result
+    return result
+
+# === Global memo cache ===
+memo = {}
+
+# === Stats: store only cumulative counts to save memory ===
+ancestor_stats = defaultdict(lambda: [float('inf'), float('-inf'), 0.0, 0])  # [min, max, sum, count]
+iteration_matrix = defaultdict(list)
 
 for i in range(n_iterations):
     print(f"[INFO] Iteration {i+1}/{n_iterations}...")
     sample_pro = random.choices(pro, k=n_pro)
-    ancestor_counts = defaultdict(int)
+
+    iteration_counts = defaultdict(int)
     for pro_id in sample_pro:
-        pro_ancestor_counts = get_ancestors_with_counts(ped, pro_id)
-        ## Add count for this iteration
-        for anc_id, count in pro_ancestor_counts.items():
-            ancestor_counts[anc_id] += count
-        ## Add results of the iteration to the dict
-    for anc_id, count in ancestor_counts.items():
-        ancestor_stats[anc_id].append(count)
-    print_memory_usage(f"Iteration {i+1} - After counting ancestors")
+        anc_counts = compute_ancestor_counts(ped, pro_id, memo)
+        for anc_id, count in anc_counts.items():
+            if anc_id == 0:
+                continue
+            iteration_counts[anc_id] += count
 
-# Create DataFrame
-ancestor_ids = list(ancestor_stats.keys())
-min_counts = [min(ancestor_stats[aid]) for aid in ancestor_ids]
-max_counts = [max(ancestor_stats[aid]) for aid in ancestor_ids]
-mean_counts = [np.mean(ancestor_stats[aid]) for aid in ancestor_ids]
+    for anc_id, count in iteration_counts.items():
+        stats = ancestor_stats[anc_id]
+        stats[0] = min(stats[0], count)
+        stats[1] = max(stats[1], count)
+        stats[2] += count
+        stats[3] += 1
 
-df_ancestor_stats = pd.DataFrame({
-    "AncestorID": ancestor_ids,
-    "MinCount": min_counts,
-    "MaxCount": max_counts,
-    "MeanCount": mean_counts
-})
+        # Update iteration matrix (include zero for missing ancestors)
+    all_anc_ids = set(iteration_counts.keys()) | set(iteration_matrix.keys())
+    for anc_id in all_anc_ids:
+        count = iteration_counts.get(anc_id, 0)
+        iteration_matrix[anc_id].append(count)
+        
+# === Save iteration matrix to CSV ===
+df = pd.DataFrame.from_dict(iteration_matrix, orient='index')
+df.index.name = 'ancestor_id'
+df.columns = [f'iteration_{i+1}' for i in range(n_iterations)]
 
-df_ancestor_stats.head()
-# Save the file
-out_file = sys.argv[2]
-df_ancestor_stats.to_csv(out_file, sep='\t', index=False)
+df.to_csv(out_file)
+print(f"[INFO] Iteration matrix saved to {out_file}")
+
