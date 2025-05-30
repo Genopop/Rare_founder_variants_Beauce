@@ -4,10 +4,12 @@ from sys import argv
 
 # Arguments: path and file names
 # datafile: .merged.ibd files (Carriers only)
+# mychr : chromosome 
+# bim_file : PLINK bim file
 datafilename = sys.argv[1]
 mychr = int(sys.argv[2])
 outputfilename = datafilename + '.sharing.by.pos'
-bim_file = sys.argv[3]  # Of everyone
+bim_file = sys.argv[3]
 
 # Load IBD sharing file
 def loadfile(datafile):
