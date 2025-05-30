@@ -8,19 +8,18 @@ library("tidyr")
 library("gridExtra")
 
 ### Load IBD sharing results (by position) from files
-path_in <- "/home/mylgag/projects/rrg-girardsi/schizo/mylgag/Beauce_founder_effect/enriched_variants/results/results_clinvar/"
-files <- list.files(path_in, pattern = "ibd_sharing_carrier_BeauceVSUrbanQc_.*_chr.*\\_V2.txt.sharing.by.pos", full.names = TRUE)
+files <- list.files(path_in, pattern = "ibd_sharing_carrier_BeauceVSUrbanQc_.*_chr.*\\.txt.sharing.by.pos", full.names = TRUE)
 
 # Extract unique variant identifiers and chromosomes from filenames
-vars <- unique(gsub("ibd_sharing_carrier_BeauceVSUrbanQc_(.*)_chr.*\\_V2.txt.sharing.by.pos", "\\1", basename(files)))
-chr <- unique(gsub("ibd_sharing_carrier_BeauceVSUrbanQc_.*_chr(.*)_V2.txt.sharing.by.pos", "\\1", basename(files)))
+vars <- unique(gsub("ibd_sharing_carrier_BeauceVSUrbanQc_(.*)_chr.*\\.txt.sharing.by.pos", "\\1", basename(files)))
+chr <- unique(gsub("ibd_sharing_carrier_BeauceVSUrbanQc_.*_chr(.*).txt.sharing.by.pos", "\\1", basename(files)))
 
 results_list <- list()
 # Load and combine sharing data by variant and chromosome
 for (v in vars) {
   chr_list <- list()
   for (c in chr) {
-    file_name <- paste0(path_in, "ibd_sharing_carrier_BeauceVSUrbanQc_", v, "_chr", c, "_V2.txt.sharing.by.pos")
+    file_name <- paste0(path_in, "ibd_sharing_carrier_BeauceVSUrbanQc_", v, "_chr", c, ".txt.sharing.by.pos")
     if (file.exists(file_name)) {
       if (file.info(file_name)$size == 0) {
         warning(paste("File is empty:", file_name))
@@ -63,7 +62,6 @@ chromosome_lengths <- data.frame(
 chromosome_lengths$cum_length <- cumsum(chromosome_lengths$length)
 
 ### Load BIM file containing SNP positions
-bim_file <- "/lustre03/project/6033529/schizo/mylgag/Beauce_founder_effect/enriched_variants/data/schizo.cag.hg38.commonsnps.mind0.05.hwe10-6_LDpruned2_maf0.05.bim"
 bim <- read.table(bim_file)
 bim$V7 <- paste0(bim$V1, ":", bim$V4)
 
@@ -88,15 +86,15 @@ for (v in names(combined_results)) {
 }
 
 ### Load IBD sharing input files (used to count carriers)
-ind_files <- list.files(path_in, pattern = "ibd_sharing_carrier_BeauceVSUrbanQc_.*_chr.*\\_V2.txt$", full.names = TRUE)
-var <- unique(gsub("ibd_sharing_carrier_BeauceVSUrbanQc_(.*)_chr.*\\_V2.txt", "\\1", basename(ind_files)))
-ch <- unique(gsub("ibd_sharing_carrier_BeauceVSUrbanQc_.*_chr(.*)_V2.txt", "\\1", basename(ind_files)))
+ind_files <- list.files(path_in, pattern = "ibd_sharing_carrier_BeauceVSUrbanQc_.*_chr.*\\.txt$", full.names = TRUE)
+var <- unique(gsub("ibd_sharing_carrier_BeauceVSUrbanQc_(.*)_chr.*\\.txt", "\\1", basename(ind_files)))
+ch <- unique(gsub("ibd_sharing_carrier_BeauceVSUrbanQc_.*_chr(.*).txt", "\\1", basename(ind_files)))
 
 ind_list <- list()
 for (v in var) {
   chr_list <- list()
   for (c in ch) {
-    file_name <- paste0(path_in, "ibd_sharing_carrier_BeauceVSUrbanQc_", v, "_chr", c, "_V2.txt")
+    file_name <- paste0(path_in, "ibd_sharing_carrier_BeauceVSUrbanQc_", v, "_chr", c, ".txt")
     if (file.exists(file_name)) {
       if (file.info(file_name)$size == 0) {
         warning(paste("File is empty:", file_name))
@@ -171,12 +169,12 @@ for (i in seq_along(proportion_df)) {
     theme(axis.text.x = element_text(angle = 90, hjust = 1))
 
   var <- unique(df$variant)
-  plot_title <- paste0(path_in, "IDB_sharing_proportion_enriched_variants_BeauceVSUrbanQc_", var, "_V2.png")
+  plot_title <- paste0(path_in, "IDB_sharing_proportion_variants_BeauceVSUrbanQc_", var, ".png")
   ggsave(plot_title, plot = gg, width = 12, height = 8)
 }
 
 # Save all data used for plotting
-save(graph_list, file = paste0(path_in, "IDB_sharing_proportion_enriched_variants_BeauceVSUrbanQc_V2.RData"))
+save(graph_list, file = paste0(path_in, "IDB_sharing_proportion_variants_BeauceVSUrbanQc.RData"))
 
 
 
