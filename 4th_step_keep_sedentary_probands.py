@@ -1,5 +1,5 @@
 ## Import packages
-import geneo as gen
+import geneakit as gen
 import pandas as pd
 import numpy as np
 import sys
@@ -21,7 +21,7 @@ print(f"Length of probands' parents: {len(parents_ids)}")
 
 ## Ensure that parents were in the same region
 regions = pd.read_csv(
-    "/path/to/all_pedigrees_dates_locations.txt", 
+    "dates_locations.txt", 
     sep=' ',
     dtype={'RegionIDMariage': int, 'IndID': int}
 )
