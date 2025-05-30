@@ -1,5 +1,5 @@
 # Import necessary packages
-import geneo as gen
+import geneakit as gen
 import pandas as pd
 import numpy as np
 import pickle
