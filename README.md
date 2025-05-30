@@ -10,7 +10,7 @@ This branch contains the scripts and documentation for the genetic analyses perf
    - [total_IBD_sharing_proportion.py](total_IBD_sharing_proportion.py) : Calculate the total proportion of shared IBD between each pair of individuals
    - [identify_related_individuals.py](identify_related_individuals.py) : Identify groups of third degree relatives (refinedIBD sharing >= 0.125 and/or genealogical kinship >= 0.0625)
    - [compute_PC-AiR.R](compute_PC-AiR.R) : Perform a principal component analysis on the cleaned genotyped data, projecting the related subset onto the unrelated sample
-   - [ancestry_clustering_PCA_UMAP_DBSCAN.R](ancestry_clustering_PCA_UMAP_DBSCAN.R) : Identify the meaningfull principal components, perform UMAP and identify clusters using DBSCAN
+   - [ancestry_clustering_PCA_UMAP_DBSCAN.R](ancestry_clustering_PCA_UMAP_DBSCAN.R) : Identify the meaningfull principal components, perform UMAP and identify clusters using DBSCAN. The resulting data can be found in the data/ folder.
    - [ibd-ne.sh](ibd-ne.sh) : Infer effective population size in each cluster using IBD segments
   
 2. **Identify founder variants**
