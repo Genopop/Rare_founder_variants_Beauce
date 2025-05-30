@@ -7,12 +7,12 @@ from sys import argv
 
 print("1st step: Subset the pedigree file into regional groups")
 ## Prepare the whole file to subset
-whole_ped = gen.genealogy("/path/to/all_pedigrees.asc")
+whole_ped = gen.genealogy("all_pedigrees.asc")
 all_pro = gen.pro(whole_ped)
 
 ## Region infos
 regions = pd.read_csv(
-    "/patho/to/all_pedigrees_dates_locations.txt", 
+    "dates_locations.txt", 
     sep=' ',
     dtype={'RegionIDMariage': int, 'IndID': int}
 )
