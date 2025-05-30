@@ -1,5 +1,5 @@
 ## Import packages
-import geneo as gen
+import geneakit as gen
 import pandas as pd
 import numpy as np
 import sys
@@ -18,7 +18,7 @@ anc_df = pd.DataFrame({'IndID': anc}).astype({'IndID': str})
 print("Length of ancestors: ", len(anc))
 
 ## Add marriage date infos
-df = pd.read_csv("/path/to/all_pedigrees_dates_locations.txt",
+df = pd.read_csv("dates_locations.txt",
 	delimiter=' ', dtype={'IndID': str})  
 anc_info = anc_df.merge(df, on='IndID')
 ## Add decades and round to the nearest upper bound
