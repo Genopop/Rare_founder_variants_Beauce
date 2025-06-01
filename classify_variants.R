@@ -12,9 +12,9 @@ library("stringr")
 
 # Load sharing proportions data (nind = # pairs sharing the variant;
 # ncarriers = # of carriers; proportion = nind / (carriers * (carriers - 1) / 2))
-load(paste0(path1, "/IDB_sharing_proportion_enriched_variants_BeauceVSUrbanQc_V2.RData"))
+load(paste0(path1, "/IDB_sharing_proportion_enriched_variants_BeauceVSUrbanQc.RData"))
 # Load variant carriers table
-carriers <- read.table("/home/mylgag/projects/rrg-girardsi/schizo/mylgag/Beauce_founder_effect/enriched_variants/results/carriers_enriched_variants_beauceVSurbanQc_V2.txt", header = TRUE)
+carriers <- read.table("carriers_enriched_variants_beauceVSurbanQc.txt", header = TRUE)
 
 ### Update variant format and extract chromosomal position
 updated_list <- lapply(graph_list, function(df) {
@@ -46,7 +46,7 @@ pairs <- carriers %>%
 pairs$variant <- gsub(":", "_", pairs$variant)
 
 ### Load related groups data (based on IBD ≥ 0.125 or kinship ≥ 0.0625)
-related_file <- "/home/mylgag/projects/rrg-girardsi/schizo/mylgag/Beauce_founder_effect/enriched_variants/results/related_groups_refinedIBD0.125_kinship0.0625.csv"
+related_file <- "related_groups_refinedIBD0.125_kinship0.0625.csv"  # Output from identify_related_individuals.py
 related <- readLines(related_file)
 related_list <- lapply(strsplit(related, ","), function(group) {
   sapply(trimws(group), function(id) paste0(id, "_", id))
@@ -121,7 +121,7 @@ variants <- data.frame(
 )
 
 ### Add carrier rate and frequency info
-cr_file <- "/lustre03/project/6033529/schizo/mylgag/Beauce_founder_effect/enriched_variants/results/results_clinvar/final_variant_results_with_carrier_rates_beauceVSUrbanQc_V2.txt"
+cr_file <- "final_variant_results_with_carrier_rates_beauceVSUrbanQc.txt"
 cr <- read.table(cr_file, header = TRUE, sep = ";")
 cr$variant <- paste0(cr$CHROM, "_",  cr$POS)
 
@@ -142,5 +142,5 @@ final_df <- data.frame(
   rfd = var_info$enrich_stand_beauce_UrbanQc
 )
 
-outfile <- "/lustre03/project/6033529/schizo/mylgag/Beauce_founder_effect/enriched_variants/results/final_table_all_variants_with_info_V2.txt"
+outfile <- "final_table_all_variants_with_info.txt"
 write.table(final_df, outfile, col.names = TRUE, row.names = FALSE, quote = FALSE, sep = ";")
