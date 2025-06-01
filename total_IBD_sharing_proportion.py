@@ -3,10 +3,10 @@ import os
 from collections import defaultdict
 
 # === Input: List of IBD file paths ===
-file_list_path = "/lustre03/project/6033529/schizo/mylgag/Beauce_founder_effect/enriched_variants/scripts/ibd_files_list.txt"
+file_list_path = "ibd_files_list.txt"
 # === Output files ===
-outfile_merged = os.path.join(path_out, "all_chr_V2.merged.ibd.txt")
-outfile_proportion = os.path.join(path_out, "all_chr.merged.ibd_with_prop_seg_shared_V2.txt")
+outfile_merged = os.path.join(path_out, "all_chr.merged.ibd.txt")
+outfile_proportion = os.path.join(path_out, "all_chr.merged.ibd_with_prop_seg_shared.txt")
 # === Initialization ===
 header_written = False
 ibd_totals = defaultdict(float)
