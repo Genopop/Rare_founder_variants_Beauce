@@ -5,7 +5,7 @@ library(SNPRelate)
 library(GENESIS)
 
 # -----------------------------------------------------------------------------
-# Step 1: Convert PLINK files to GDS format
+# Step 1: Convert cleaned genotyped PLINK files to GDS format
 # -----------------------------------------------------------------------------
 snpgdsBED2GDS(
   bed.fn = paste0(dir, prefix, ".bed"),
@@ -31,7 +31,7 @@ all_inds <- read.table(paste0(dir, prefix, ".fam"))
 # Step 4: Filter out related individuals
 # -----------------------------------------------------------------------------
 ## refined IBD (cutoff 0.125) + pedigree (cutoff 0.0625)
-to_exclude <- "/home/mylgag/projects/rrg-girardsi/schizo/mylgag/Beauce_founder_effect/enriched_variants/results/IBD_related_groups0.125_and_pedigree_groups0.0625_inds_to_exclude.txt"
+to_exclude <- "IBD_related_groups0.125_and_pedigree_groups0.0625_inds_to_exclude.txt"  # output from identify_related_individuals.py
 to_exclude <- read.table(to_exclude, header = FALSE)
 
 # Keep only unrelated individuals
