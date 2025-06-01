@@ -14,7 +14,7 @@ This branch contains the scripts and documentation for the genetic analyses perf
    - [ibd-ne.sh](ibd-ne.sh) : Infer effective population size in each cluster using IBD segments
   
 2. **Identify founder variants**
-   - [identify_variants_with_higher_frequency.R](identify_variants_with_higher_frequency.R) :
+   - [identify_variants_with_higher_freq.R](identify_variants_with_higher_freq.R) :
    - [filter_enriched_variants_carriers_ibd.R](filter_enriched_variants_carriers_ibd.R) : 
    - [IBDsharing_byPosition.py](IBDsharing_byPosition.py) :
    - [IBDsharing_variantPosition.py](IBDsharing_variantPosition.py) :
