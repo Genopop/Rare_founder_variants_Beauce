@@ -22,7 +22,7 @@ tped_data <- fread(variants_file, header = FALSE)
 variants_with_information <- read.table(
   "all_variant_enriched_in_beauce_compared_UrbanQc_tresh_0.1.txt", 
   header = TRUE
-)
+)  # Output from identify_variants_with_higher_freq
 
 # Build dataframe of ALT alleles
 minor_alleles <- data.frame(
