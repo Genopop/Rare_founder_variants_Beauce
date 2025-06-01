@@ -1,7 +1,7 @@
 #### Identify clinvar variants with a higher frequency in Beauce compared to UrbanQc
 # Load ClinVar reference variants
-VAT_variants_info <- read.table("/lustre03/project/6033529/saguenay_disease/Analyses_final_version_really/ClinVar_reference/ClinVar_variants_to_analyse_well_ref_and_known_variants_added.txt", header = TRUE)
-VAT_variants_info$variant <- paste0(VAT_variants_info$CHROM, "_", VAT_variants_info$POS)
+variants_info <- read.table("ClinVar_variants_to_analyse_well_ref_and_known_variants_added.txt", header = TRUE)
+variants_info$variant <- paste0(variants_info$CHROM, "_", variants_info$POS)
 
 # Load Beauce and UrbanQc allele frequency data (output from PLINK --freq)
 beauce <- read.table(subpop1, header = TRUE)
@@ -51,9 +51,9 @@ comp_clean$variant <- paste0(comp_clean$CHROM, "_", comp_clean$POS)
 # -----------------------------------------------------------------------------
 # Merge with ClinVar data, accounting for possible allele switches
 # -----------------------------------------------------------------------------
-switch_handler <- function(comp_clean, VAT_variants_info) {
+switch_handler <- function(comp_clean, variants_info) {
   comp_clean %>%
-    left_join(VAT_variants_info, by = "variant") %>%
+    left_join(variants_info, by = "variant") %>%
     mutate(
       matched = case_when(
         A1 == REF & A2 == ALT ~ TRUE,  # Switched
@@ -63,7 +63,7 @@ switch_handler <- function(comp_clean, VAT_variants_info) {
     filter(matched == TRUE)  # Keep only valid matches
 }
 
-new_beauce_df <- switch_handler(comp_clean, VAT_variants_info)
+new_beauce_df <- switch_handler(comp_clean, variants_info)
 
 # -----------------------------------------------------------------------------
 # Final dataset with relevant annotations
@@ -104,7 +104,7 @@ p <- ggplot(final_beauce_df, aes(x = MAF_UrbanQc, y = MAF_beauce)) +
     axis.title.y = element_text(size = 20)
   )
 # Save plot to file
-ggsave("/lustre03/project/6033529/schizo/mylgag/Beauce_founder_effect/enriched_variants/results/results_clinvar/differential_frequency_BeauceVSUrbanQcV2.png", 
+ggsave("differential_frequency_BeauceVSUrbanQc.png", 
        p, width = 10, height = 10, units = "in")
 
 # -----------------------------------------------------------------------------
@@ -112,7 +112,7 @@ ggsave("/lustre03/project/6033529/schizo/mylgag/Beauce_founder_effect/enriched_v
 # -----------------------------------------------------------------------------
 # Save final annotated variant list
 write.table(final_beauce_df,
-            "/lustre03/project/6033529/schizo/mylgag/Beauce_founder_effect/enriched_variants/results/results_clinvar/all_variant_enriched_in_beauce_compared_UrbanQc_Imput_CaG_tresh_0.1_V2.txt",
+            "all_variant_enriched_in_beauce_compared_UrbanQc_tresh_0.1.txt",
             row.names = FALSE, col.names = TRUE, quote = FALSE)
 
 # Prepare simple variant ID list (CHR:POS) for extraction
@@ -121,6 +121,6 @@ var <- unique(data.frame(var = var))
 
 # Save variant ID list
 write.table(var,
-            "/lustre03/project/6033529/schizo/mylgag/Beauce_founder_effect/enriched_variants/results/results_clinvar/to_extract_variant_enriched_in_beauce_compared_UrbanQc_Imput_CaG_tresh_0.1_V2.txt",
+            "to_extract_variant_enriched_in_beauce_compared_UrbanQc_Imput_CaG_tresh_0.1.txt",
             row.names = FALSE, col.names = FALSE, quote = FALSE)
 
