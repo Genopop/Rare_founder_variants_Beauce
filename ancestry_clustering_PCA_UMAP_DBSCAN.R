@@ -12,7 +12,7 @@ library(changepoint)
 # =========================
 # 1. Load PCA Object
 # =========================
-load("schizo.cag.hg38.commonsnps.mind0.05.hwe10-6_LDpruned_maf0.05_canadianIDs_PC-AiR_IBD0.125_pedrigree0.0625_related.RData")
+load(paste0(prefix, "_PC-AiR_IBD0.125_pedrigree0.0625_related.RData"))  # Output from compute_PC-AiR.R
 mypcair <- unrel_pcair
 pcs <- data.frame(mypcair$vectors)
 colnames(pcs) <- paste0("PC", 1:ncol(pcs))
