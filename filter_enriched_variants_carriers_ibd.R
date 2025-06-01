@@ -12,22 +12,22 @@ library(dplyr)
 library(data.table)
 
 # Paths to .tped and .tfam files
-variants_file <- "/lustre03/project/6033529/schizo/mylgag/Beauce_founder_effect/enriched_variants/results/results_clinvar/variant_enriched_in_beauce_compared_UrbanQc_Imput_CaG_tresh_0.1_V2.tped"
-indiv_file <- "/lustre03/project/6033529/schizo/mylgag/Beauce_founder_effect/enriched_variants/results/results_clinvar/variant_enriched_in_beauce_compared_UrbanQc_Imput_CaG_tresh_0.1_V2.tfam"
+variants_file <- "variant_enriched_in_beauce_compared_UrbanQc_tresh_0.1.tped"
+indiv_file <- "variant_enriched_in_beauce_compared_UrbanQc_tresh_0.1.tfam"
 
 # Read enriched variants
 tped_data <- fread(variants_file, header = FALSE)
 
 # Read variant annotations to identify ALT alleles
-VAT_variants_with_information_NTNFE <- read.table(
-  "/lustre03/project/6033529/schizo/mylgag/Beauce_founder_effect/enriched_variants/results/results_clinvar/all_variant_enriched_in_beauce_compared_UrbanQc_Imput_CaG_tresh_0.1_V2.txt", 
+variants_with_information <- read.table(
+  "all_variant_enriched_in_beauce_compared_UrbanQc_tresh_0.1.txt", 
   header = TRUE
 )
 
 # Build dataframe of ALT alleles
 minor_alleles <- data.frame(
-  SNP = paste0(VAT_variants_with_information_NTNFE$CHROM, ":", VAT_variants_with_information_NTNFE$POS),
-  ALT = VAT_variants_with_information_NTNFE$A1
+  SNP = paste0(variants_with_information$CHROM, ":", variants_with_information$POS),
+  ALT = variants_with_information$A1
 ) %>% unique()
 
 # Keep only variants of interest
@@ -94,20 +94,17 @@ carriers_corrected <- carriers_corrected %>%
 # Save carriers file
 write.table(
   carriers_corrected, 
-  "/lustre03/project/6033529/schizo/mylgag/Beauce_founder_effect/enriched_variants/results/carriers_enriched_variants_beauceVSurbanQc_V2.txt", 
+  "carriers_enriched_variants_beauceVSurbanQc.txt", 
   sep = '\t', quote = FALSE, row.names = FALSE, col.names = TRUE
 )
 
 ##### Load final carrier list and IBD file list
-
-carrier_file <- "/lustre03/project/6033529/schizo/mylgag/Beauce_founder_effect/enriched_variants/results/carriers_enriched_variants_beauceVSurbanQc_in_UrbanQc_V2.txt"
+carrier_file <- "carriers_enriched_variants_beauceVSurbanQc.txt"
 carriers_corrected <- read.table(carrier_file, header = TRUE)
 
-path_out <- "/home/mylgag/projects/rrg-girardsi/schizo/mylgag/Beauce_founder_effect/enriched_variants/results/results_clinvar/"
-file_names <- readLines("/home/mylgag/projects/rrg-girardsi/schizo/mylgag/Beauce_founder_effect/enriched_variants/scripts/ibd_files_list.txt")
+file_names <- readLines("ibd_files_list.txt")
 
 ##### Filter IBD segments shared by carriers for each chromosome
-
 chr_numbers <- 1:22
 
 for (i in seq_along(file_names)) {
@@ -138,6 +135,6 @@ for (i in seq_along(file_names)) {
 unique_variants <- data.frame(variant = unique(carriers_corrected$variant))
 write.table(
   unique_variants,
-  paste0(path_out, "list_of_variants_BeauceVSUrbanQc_in_UrbanQc_V2.txt"),
+  paste0(path_out, "list_of_variants_BeauceVSUrbanQc_in_UrbanQc.txt"),
   row.names = FALSE, col.names = FALSE, quote = FALSE
 )
