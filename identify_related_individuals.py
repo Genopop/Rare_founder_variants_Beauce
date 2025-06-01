@@ -7,11 +7,11 @@ import networkx as nx
 import csv
 
 # Load pedigree data
-pedigree_path = "/lustre03/project/6033529/quebec_10x/data/genealogy/gen.Janv2022.aveCodesGenetiques.csv"
+pedigree_path = "SZ-BP_pedigree.csv"
 pedigree_df = pd.read_csv(pedigree_path, sep=";")
 pedigree = gen.genealogy(pedigree_df)
 # Load list of genotyped individuals
-ids_path = "/lustre03/project/6033529/schizo/mylgag/Beauce_founder_effect/enriched_variants/data/schizo.cag.hg38.commonsnps.mind0.05.hwe10-6_LDpruned2_maf0.05.fam"
+ids_path = "SZ-BP_CaG_genotypes.fam"
 ids_df = pd.read_csv(ids_path, sep="\s+", header=None)
 genotyped_ids = ids_df.iloc[:, 1]
 # Filter pedigree for genotyped individuals
@@ -21,7 +21,7 @@ subset_pedigree = gen.branching(pedigree, pro=genotyped_df['ind'])
 
 # Compute kinship matrix and save it
 kinship_matrix = gen.phi(subset_pedigree)
-kinship_output_path = "/home/mylgag/projects/rrg-girardsi/schizo/mylgag/Beauce_founder_effect/genealogies/results/schizo_kinship_common_inds.pkl"
+kinship_output_path = "schizo_kinship_common_inds.pkl"
 with open(kinship_output_path, "wb") as f:
     pickle.dump(kinship_matrix, f)
 
@@ -36,7 +36,7 @@ for i in range(len(kinship_matrix)):
 kinship_groups = list(nx.connected_components(kinship_graph))
 
 # Load IBD results
-ibd_path = "/home/mylgag/projects/rrg-girardsi/schizo/mylgag/Beauce_founder_effect/enriched_variants/results/results_clinvar/all_chr.merged.ibd_with_prop_seg_shared.txt"
+ibd_path = "all_chr.merged.ibd_with_prop_seg_shared.txt"
 ibd_df = pd.read_csv(ibd_path, sep="\t")
 ibd_df['%seg_shared'] = pd.to_numeric(ibd_df['%seg_shared'], errors='coerce')
 third_degree_ibd = ibd_df[ibd_df['%seg_shared'] >= 12.5]
@@ -54,7 +54,7 @@ for group in ibd_groups_raw:
     print(group)
 
 # Save IBD groups to file
-ibd_groups_output_path = "/home/mylgag/projects/rrg-girardsi/schizo/mylgag/Beauce_founder_effect/enriched_variants/results/IBD_related_groups.txt"
+ibd_groups_output_path = "IBD_related_groups.txt"
 with open(ibd_groups_output_path, "w") as f:
     for group in ibd_groups_raw:
         f.write(",".join(group) + "\n")
@@ -104,7 +104,7 @@ for idx, group in enumerate(unique_groups, start=1):
     print(f"Group {idx}: {', '.join(sorted(group, key=int))}")
 
 # Save merged related groups
-group_output_path = "/home/mylgag/projects/rrg-girardsi/schizo/mylgag/Beauce_founder_effect/enriched_variants/results/related_groups_refinedIBD0.125_kinship0.0625.csv"
+group_output_path = "related_groups_refinedIBD0.125_kinship0.0625.csv"
 with open(group_output_path, 'w', newline='') as f:
     writer = csv.writer(f)
     writer.writerows([sorted(group, key=int) for group in unique_groups])
@@ -130,5 +130,5 @@ excluded_df = pd.DataFrame({'excluded_individual': sorted(excluded_inds)})
 excluded_split_df = excluded_df['excluded_individual'].str.split('_', expand=True)
 
 # Save individuals to exclude
-exclusion_output_path = "/home/mylgag/projects/rrg-girardsi/schizo/mylgag/Beauce_founder_effect/enriched_variants/results/IBD_related_groups0.125_and_pedigree_groups0.0625_inds_to_exclude.txt"
+exclusion_output_path = "IBD_related_groups0.125_and_pedigree_groups0.0625_inds_to_exclude.txt"
 excluded_split_df.to_csv(exclusion_output_path, sep='\t', index=False, header=False)
