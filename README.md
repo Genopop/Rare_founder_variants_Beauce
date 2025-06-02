@@ -17,7 +17,7 @@ This repository contains two branches :
 - **Genealogical_analyses** contains the scripts and documentation related to the genealogical analyses performed
 - **Genetic_analyses** contains the scripts and documentation related to the ancestry-based clustering of the genotyped data and the identification rare pathogenic variants with an elevated frequency in Beauce due to the regional founder effect.
 
-Both repositories also contain the aggregated data necessary to reproduce the main Figures
+Both branches also contain the aggregated data necessary to reproduce the main Figures
 
 ---
 
