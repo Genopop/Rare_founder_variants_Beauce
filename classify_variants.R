@@ -10,7 +10,7 @@ library("data.table")
 library("dplyr")
 library("stringr")
 
-# Load sharing proportions data (nind = # pairs sharing the variant;
+# Load sharing proportions data (nind = # pairs sharing the variant;  # Output from IBDsharing_variantPosition.py
 # ncarriers = # of carriers; proportion = nind / (carriers * (carriers - 1) / 2))
 load(paste0(path1, "/IDB_sharing_proportion_enriched_variants_BeauceVSUrbanQc.RData"))
 # Load variant carriers table
