@@ -14,11 +14,11 @@ This branch contains the scripts and documentation for the genetic analyses perf
    - [ibd-ne.sh](ibd-ne.sh) : Infer effective population size in each cluster using IBD segments
   
 2. **Identify founder variants**
-   - [identify_variants_with_higher_freq.R](identify_variants_with_higher_freq.R) :
-   - [filter_enriched_variants_carriers_ibd.R](filter_enriched_variants_carriers_ibd.R) : 
-   - [IBDsharing_byPosition.py](IBDsharing_byPosition.py) :
-   - [IBDsharing_variantPosition.py](IBDsharing_variantPosition.py) :
-   - [classify_variants.R](classify_variants.R) : 
+   - [identify_variants_with_higher_freq.R](identify_variants_with_higher_freq.R) : Identify ClinVar variants with a relative frequency difference of at least 0.1 in Beauce compared to UrbanQc
+   - [filter_enriched_variants_carriers_ibd.R](filter_enriched_variants_carriers_ibd.R) : Identify carriers of the variants with a higher frequency and only keep variants with at least 5 carriers
+   - [IBDsharing_byPosition.py](IBDsharing_byPosition.py) : For each variant, get the number of pairs of carriers sharing IBD at each position
+   - [IBDsharing_variantPosition.py](IBDsharing_variantPosition.py) : Calculate the proportion of pairs of carriers sharing at the variant's position
+   - [classify_variants.R](classify_variants.R) : Classify the variants as either familial, founder or resulting from multiple introductions
 
 
 ---
