@@ -1,6 +1,6 @@
 #### Identify clinvar variants with a higher frequency in Beauce compared to UrbanQc
 # Load ClinVar reference variants
-variants_info <- read.table("ClinVar_variants_to_analyse_well_ref_and_known_variants_added.txt", header = TRUE)
+variants_info <- read.table("ClinVar_variants_to_analyse_well_ref_and_known_variants_added.txt", header = TRUE)  # List of ClinVar variants
 variants_info$variant <- paste0(variants_info$CHROM, "_", variants_info$POS)
 
 # Load Beauce and UrbanQc allele frequency data (output from PLINK --freq)
