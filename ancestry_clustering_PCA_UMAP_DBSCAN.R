@@ -41,66 +41,10 @@ gg <- ggplot(eigens_df, aes(x = seq_along(V1), y = V1)) +
 ggsave("figS2_PCs_eigenvals.svg", gg, width = 5, height = 5, dpi = 300, units = "in")
 
 # =========================
-# 3. Region and Phenotype Information
+# 3. Add recruitment regions and cohort information
 # =========================
-# Load metadata
-reg <- read.table("Regions_familles.csv", header = TRUE, sep = ";", fileEncoding = "UTF-8")
-reg <- data.frame(FID = reg$Famille, region = reg$Region)
+# Already provided in the data/ folder
 
-region_carta <- read.table("CaG_regions.txt", header = TRUE, fileEncoding = "UTF-8")
-region_carta30k <- read.table("region_cartagene.30k.txt", header = FALSE, fileEncoding = "UTF-8")
-region_carta30k <- data.frame(IID = region_carta30k$V2, region = region_carta30k$V3)
-
-continents <- read.table("cartagene_some_continent.txt", header = TRUE, fileEncoding = "UTF-8")
-country <- read.table("cartagene_birth_country.30k.txt", header = TRUE)
-
-# Combine country and continent data
-idscountry <- merge(ids, country, by.x = "IID", by.y = "file_111", all.x = TRUE) %>%
-  mutate(COUNTRY_BIRTH = coalesce(COUNTRY_BIRTH, COUNTRY_BIRTH_OTHER),
-         COUNTRY_BIRTH = if_else(COUNTRY_BIRTH == 99, COUNTRY_BIRTH_OTHER, COUNTRY_BIRTH)) %>%
-  merge(continents, by.x = "COUNTRY_BIRTH", by.y = "country_num", all.x = TRUE) %>%
-  select(-COUNTRY_BIRTH, -COUNTRY_BIRTH_OTHER, -continent_num)
-
-# Load phenotype information
-phen <- read.table("pheno14052021.csv", sep = ";", header = TRUE, fileEncoding = "UTF-8")
-pheno_df <- phen %>% transmute(FID = fam, IID = id, BP = pheno_BPbr, SZ = pheno_SZbr)
-
-# Classify individuals
-pheno_df <- pheno_df %>%
-  mutate(Category = case_when(
-    BP == 2 & SZ == 1 ~ "Bipolar",
-    BP == 1 & SZ == 2 ~ "Schizophrenic",
-    BP == 1 & SZ == 1 ~ "Unaffected",
-    BP == 0 & SZ == 0 ~ "Unknown",
-    TRUE ~ NA_character_)) %>%
-  drop_na(Category)
-
-# Merge metadata
-idscountry <- merge(idscountry, pheno_df[, c("FID", "IID", "Category")], by = "IID", all.x = TRUE)
-idsreg <- idscountry %>%
-  left_join(region_carta30k, by = "IID") %>%
-  left_join(reg, by = "FID") %>%
-  mutate(regions = coalesce(region, region.y)) %>%
-  mutate(cohorte = case_when(
-    IID %in% pheno_df$IID ~ "PDC",
-    IID %in% region_carta30k$IID ~ "CaG",
-    TRUE ~ NA_character_
-  )) %>%
-  mutate(origin = case_when(
-    country == "NO" ~ NA_character_,
-    country == "CANADA" | is.na(country) ~ regions,
-    TRUE ~ country
-  )) %>%
-  mutate(origin = recode(origin,
-    "HAITI" = "Haiti", "MOROCCO" = "Morocco", "NB_Iles" = "Qc (Iles-de-la-Madeleine)",
-    "Beauce" = "Qc (Beauce)", "Trois-Rivières" = "Qc (Trois-Rivieres)",
-    "Saguenay" = "Qc (SLSJ)", "Sherbrooke" = "Qc (Sherbrooke)", 
-    "Montréal" = "Qc (Montreal)", "Gatineau" = "Qc (Gatineau)", 
-    "Québec" = "Qc (Quebec City)"
-  )) %>%
-  mutate(origin = if_else(is.na(origin), continent, origin)) %>%
-  mutate(origin = if_else(is.na(origin), "Unknown", origin)) %>%
-  distinct()
 
 # =========================
 # 4. PCA Plotting
