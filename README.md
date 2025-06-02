@@ -30,7 +30,7 @@ The following packages are required:
 
 - `pandas`
 - `numpy`
-- [`GeneaKit`]([https://github.com/GPhMorin/geneakit](https://github.com/Genopop/geneakit))
+- [`GeneaKit`](https://github.com/Genopop/geneakit)
 
 ---
 
