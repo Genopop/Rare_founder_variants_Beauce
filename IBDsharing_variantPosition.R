@@ -7,7 +7,7 @@ library("stringr")
 library("tidyr")
 library("gridExtra")
 
-### Load IBD sharing results (by position) from files
+### Load IBD sharing results (by position) from files  # Output from IBDsharing_byPosition.py
 files <- list.files(path_in, pattern = "ibd_sharing_carrier_BeauceVSUrbanQc_.*_chr.*\\.txt.sharing.by.pos", full.names = TRUE)
 
 # Extract unique variant identifiers and chromosomes from filenames
@@ -85,7 +85,7 @@ for (v in names(combined_results)) {
   modified_data_list[[v]] <- df
 }
 
-### Load IBD sharing input files (used to count carriers)
+### Load IBD sharing input files (used to count carriers)  # Output from filter_enriched_variants_carriers_ibd.R
 ind_files <- list.files(path_in, pattern = "ibd_sharing_carrier_BeauceVSUrbanQc_.*_chr.*\\.txt$", full.names = TRUE)
 var <- unique(gsub("ibd_sharing_carrier_BeauceVSUrbanQc_(.*)_chr.*\\.txt", "\\1", basename(ind_files)))
 ch <- unique(gsub("ibd_sharing_carrier_BeauceVSUrbanQc_.*_chr(.*).txt", "\\1", basename(ind_files)))
