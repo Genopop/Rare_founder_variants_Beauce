@@ -68,7 +68,7 @@ totals_long = df_year_grouped.melt(
     value_name='total_count'
 )
 
-# === Compute ADR (ancestor discovery ratio) ===
+# === Compute ADR (ancestor diversity ratio) ===
 print("Calculate ADR")
 joined = pd.merge(unique, totals_long, on=['decade', 'pro', 'iteration'], how='left')
 joined['ratio'] = joined['n_unique'] / joined['total_count']
