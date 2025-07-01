@@ -125,7 +125,7 @@ for (i in seq_along(file_names)) {
       filter(ind1 %in% ids & ind2 %in% ids) %>%
       mutate(variant = variant)
 
-    output_file <- paste0(path_out, "ibd_sharing_carrier_BeauceVSUrbanQc_", variant, "_chr", chr, "_in_UrbanQc.txt")
+    output_file <- paste0(path_out, "ibd_sharing_carrier_BeauceVSUrbanQc_", variant, "_chr", chr, ".txt")
     write.table(filtered, output_file, row.names = FALSE, quote = FALSE)
     print(paste("Written file:", output_file))
   }
@@ -135,6 +135,6 @@ for (i in seq_along(file_names)) {
 unique_variants <- data.frame(variant = unique(carriers_corrected$variant))
 write.table(
   unique_variants,
-  paste0(path_out, "list_of_variants_BeauceVSUrbanQc_in_UrbanQc.txt"),
+  paste0(path_out, "list_of_variants_BeauceVSUrbanQc.txt"),
   row.names = FALSE, col.names = FALSE, quote = FALSE
 )
