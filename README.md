@@ -18,7 +18,7 @@ This branch contains the scripts and documentation for the genetic analyses perf
    - [calculate_carrier_rates.R](calculate_carrier_rates.R) : Calculate the carrier rate for each variant with a higher frequency
    - [filter_enriched_variants_carriers_ibd.R](filter_enriched_variants_carriers_ibd.R) : Identify carriers of the variants with a higher frequency and only keep variants with at least 5 carriers
    - [IBDsharing_byPosition.py](IBDsharing_byPosition.py) : For each variant, get the number of pairs of carriers sharing IBD at each position
-   - [IBDsharing_variantPosition.py](IBDsharing_variantPosition.py) : Calculate the proportion of pairs of carriers sharing at the variant's position
+   - [IBDsharing_variantPosition.R](IBDsharing_variantPosition.R) : Calculate the proportion of pairs of carriers sharing at the variant's position
    - [classify_variants.R](classify_variants.R) : Classify the variants as either familial, founder or resulting from multiple introductions
 
 
