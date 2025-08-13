@@ -3,6 +3,7 @@
 Code repository for the article:  
 **"Rare variants and founder effect in an understudied Quebec population"**  
 **Mylène Gagnon**, Claudia Moreau, Jasmin Ricard, Marie-Claude Boisvert, Alexandre Bureau, Michel Maziade, Simon L. Girard  
+[https://doi.org/10.1038/s42003-025-08630-7](https://doi.org/10.1038/s42003-025-08630-7) 
 
 ---
 
